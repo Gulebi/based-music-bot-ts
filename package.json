@@ -1,0 +1,26 @@
+{
+    "name": "based-music-bot",
+    "version": "0.0.0",
+    "description": "Based Music Bot TS",
+    "private": "true",
+    "main": "./src/index.ts",
+    "scripts": {
+        "dev": "nodemon ./src/index.ts"
+    },
+    "keywords": [],
+    "author": "Gulebi",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^20.1.0",
+        "nodemon": "^2.0.22",
+        "typescript": "^5.0.4"
+    },
+    "dependencies": {
+        "@discordjs/opus": "^0.9.0",
+        "discord-player": "^6.3.0",
+        "discord.js": "^14.11.0",
+        "dotenv": "^16.0.3",
+        "ffmpeg-static": "^5.1.0",
+        "ytdl-core": "^4.11.4"
+    }
+}
