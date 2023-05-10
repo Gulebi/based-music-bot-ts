@@ -1,17 +1,18 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../types";
+import { colors, getAvatar, getUsername } from "../utils";
 
 const command: SlashCommand = {
     data: new SlashCommandBuilder().setName("ping").setDescription("Shows the bot's ping"),
     execute: async ({ interaction, player }) => {
         try {
-            const queue = player.nodes.get(interaction.guildId!);
+            const queue = interaction.inCachedGuild() && player.nodes.get(interaction.guildId);
 
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setColor("#4188D2")
                         .setTitle("Понг!")
+                        .setColor(colors.baseColor)
                         .addFields(
                             {
                                 name: "Пинг:",
@@ -22,7 +23,10 @@ const command: SlashCommand = {
                                 value: !queue ? "`N/A`" : `\`${queue.ping ?? "`N/A`"}\`ms`,
                             }
                         )
-                        .setFooter({ text: "Based Music Bot", iconURL: "https://imgur.com/Zd14R2K.png" }),
+                        .setFooter({
+                            text: getUsername(interaction),
+                            iconURL: getAvatar(interaction),
+                        }),
                 ],
             });
         } catch (error) {

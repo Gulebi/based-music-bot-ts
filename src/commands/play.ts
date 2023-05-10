@@ -1,21 +1,33 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../types";
 import { QueryType } from "discord-player";
+import { colors, getUsername, getAvatar } from "../utils";
 
 const command: SlashCommand = {
     data: new SlashCommandBuilder()
         .setName("play")
-        .setDescription("Play command")
+        .setDescription("Play track")
         .addStringOption((option) => option.setName("query").setDescription("query").setRequired(true)),
     execute: async ({ interaction, player }) => {
         try {
+            await interaction.deferReply();
+
             const channel = interaction.inCachedGuild() && interaction.member.voice.channel;
 
-            if (!channel) return interaction.reply("You are not connected to a voice channel!");
+            if (!channel)
+                return interaction.followUp({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle("Вы не подключены к голосовому каналу!")
+                            .setColor(colors.baseColor)
+                            .setFooter({
+                                text: getUsername(interaction),
+                                iconURL: getAvatar(interaction),
+                            }),
+                    ],
+                });
 
             const query = interaction.options.getString("query", true);
-
-            await interaction.deferReply();
 
             const { track } = await player.play(channel, query, {
                 requestedBy: interaction.user,
@@ -26,7 +38,7 @@ const command: SlashCommand = {
                 },
             });
 
-            return interaction.followUp(`**${track.title}** enqueued!`);
+            return interaction.followUp(`Трек **${track.title}** добавлен в очередь!`);
         } catch (error) {
             console.error(error);
             return await interaction.editReply({
