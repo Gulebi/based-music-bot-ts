@@ -3,14 +3,14 @@ import { SlashCommand } from "../types";
 import { colors, getAvatar, getUsername } from "../utils";
 
 const command: SlashCommand = {
-    data: new SlashCommandBuilder().setName("resume").setDescription("Resume player"),
+    data: new SlashCommandBuilder().setName("previous").setDescription("Play previous track"),
     execute: async ({ interaction, player }) => {
         try {
             await interaction.deferReply();
 
             const queue = interaction.inCachedGuild() && player.nodes.get(interaction.guildId);
 
-            if (!queue || !queue.isPlaying())
+            if (!queue || !queue.isPlaying() || !queue.currentTrack)
                 return interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
@@ -23,21 +23,8 @@ const command: SlashCommand = {
                     ],
                 });
 
-            if (queue.node.isPlaying())
-                return interaction.followUp({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setTitle("Плеер уже возобновлен!")
-                            .setColor(colors.baseColor)
-                            .setFooter({
-                                text: getUsername(interaction),
-                                iconURL: getAvatar(interaction),
-                            }),
-                    ],
-                });
-
             queue.setMetadata(interaction);
-            queue.node.resume();
+            queue.history.back();
         } catch (error) {
             console.error(error);
             return await interaction.editReply({

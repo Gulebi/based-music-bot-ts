@@ -14,6 +14,34 @@ export default function registerPlayerEvents(player: Player) {
         console.log(`[${queue.guild.name}] Error emitted from the player: ${error.message}`);
     });
 
+    player.events.on("playerSkip", (queue, track) => {
+        const interaction = queue.metadata as ChatInputCommandInteraction;
+
+        interaction.followUp({
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle(`${interaction.user.username} cкипнул ${track.title} | ${track.author}!`)
+                    .setColor(colors.baseColor),
+            ],
+        });
+    });
+
+    player.events.on("playerPause", (queue) => {
+        const interaction = queue.metadata as ChatInputCommandInteraction;
+
+        interaction.followUp({
+            embeds: [new EmbedBuilder().setTitle("Плеер приостановлен!").setColor(colors.baseColor)],
+        });
+    });
+
+    player.events.on("playerResume", (queue) => {
+        const interaction = queue.metadata as ChatInputCommandInteraction;
+
+        interaction.followUp({
+            embeds: [new EmbedBuilder().setTitle("Плеер возобновлен!").setColor(colors.baseColor)],
+        });
+    });
+
     player.events.on("audioTrackAdd", (queue, track) => {
         const interaction = queue.metadata as ChatInputCommandInteraction;
 
@@ -24,11 +52,7 @@ export default function registerPlayerEvents(player: Player) {
                     .setColor(colors.baseColor)
                     .setDescription(`🎶 [\`${track.title}\`](${track.url})`)
                     .addFields([{ name: "Автор", value: `\`${track.author}\``, inline: true }])
-                    .setThumbnail(track.thumbnail)
-                    .setFooter({
-                        text: getUsername(interaction),
-                        iconURL: getAvatar(interaction),
-                    }),
+                    .setThumbnail(track.thumbnail),
             ],
         });
     });
@@ -36,7 +60,9 @@ export default function registerPlayerEvents(player: Player) {
     player.events.on("playerStart", (queue, track) => {
         const interaction = queue.metadata as ChatInputCommandInteraction;
 
-        interaction.followUp({
+        const channel = interaction.channel;
+
+        channel?.send({
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Сейчас играет")
@@ -51,11 +77,7 @@ export default function registerPlayerEvents(player: Player) {
                         },
                         { name: "Автор", value: `\`${track.author}\``, inline: true },
                         { name: "Длительность", value: `\`${track.duration}\``, inline: true },
-                    ])
-                    .setFooter({
-                        text: getUsername(interaction),
-                        iconURL: getAvatar(interaction),
-                    }),
+                    ]),
             ],
         });
     });
@@ -75,7 +97,9 @@ export default function registerPlayerEvents(player: Player) {
     player.events.on("emptyQueue", (queue) => {
         const interaction = queue.metadata as ChatInputCommandInteraction;
 
-        interaction.followUp({
+        const channel = interaction.channel;
+
+        channel?.send({
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Очередь закончена")

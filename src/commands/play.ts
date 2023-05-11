@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from "discord.js";
 import { SlashCommand } from "../types";
 import { QueryType } from "discord-player";
 import { colors, getUsername, getAvatar } from "../utils";
@@ -29,7 +29,7 @@ const command: SlashCommand = {
 
             const query = interaction.options.getString("query", true);
 
-            const { track } = await player.play(channel, query, {
+            await player.play<ChatInputCommandInteraction>(channel, query, {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.AUTO,
                 nodeOptions: {

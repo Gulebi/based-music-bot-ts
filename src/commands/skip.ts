@@ -23,21 +23,8 @@ const command: SlashCommand = {
                     ],
                 });
 
+            queue.setMetadata(interaction);
             queue.node.skip();
-
-            return interaction.followUp({
-                embeds: [
-                    new EmbedBuilder()
-                        .setTitle(
-                            `${interaction.user.username} cкипнул ${queue.currentTrack.title} | ${queue.currentTrack.author}!`
-                        )
-                        .setColor(colors.baseColor)
-                        .setFooter({
-                            text: getUsername(interaction),
-                            iconURL: getAvatar(interaction),
-                        }),
-                ],
-            });
         } catch (error) {
             console.error(error);
             return await interaction.editReply({

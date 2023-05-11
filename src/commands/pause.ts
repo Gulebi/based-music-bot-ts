@@ -36,19 +36,8 @@ const command: SlashCommand = {
                     ],
                 });
 
+            queue.setMetadata(interaction);
             queue.node.pause();
-
-            return interaction.followUp({
-                embeds: [
-                    new EmbedBuilder()
-                        .setTitle("Плеер приостановлен!")
-                        .setColor(colors.baseColor)
-                        .setFooter({
-                            text: getUsername(interaction),
-                            iconURL: getAvatar(interaction),
-                        }),
-                ],
-            });
         } catch (error) {
             console.error(error);
             return await interaction.editReply({
