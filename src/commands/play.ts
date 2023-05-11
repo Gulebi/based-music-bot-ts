@@ -34,11 +34,13 @@ const command: SlashCommand = {
                 searchEngine: QueryType.AUTO,
                 nodeOptions: {
                     metadata: interaction,
+                    bufferingTimeout: 3000,
                     leaveOnEnd: false,
+                    leaveOnStop: false,
+                    leaveOnEmpty: true,
+                    leaveOnEmptyCooldown: 60 * 1000 * 3,
                 },
             });
-
-            return interaction.followUp(`Трек **${track.title}** добавлен в очередь!`);
         } catch (error) {
             console.error(error);
             return await interaction.editReply({

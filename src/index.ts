@@ -8,11 +8,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 registerClientEvents(client);
 
-const player = new Player(client, {
-    ytdlOptions: {
-        quality: "lowestaudio",
-    },
-});
+const player = new Player(client);
 
 registerPlayerEvents(player);
 

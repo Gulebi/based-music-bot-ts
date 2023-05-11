@@ -1,4 +1,4 @@
-import { Client, Events } from "discord.js";
+import { ActivityType, Client, Events } from "discord.js";
 import { cmdLoader, cmdTrigger } from "../cmdHandler";
 import { useMasterPlayer } from "discord-player";
 
@@ -7,6 +7,8 @@ export default function registerClientEvents(client: Client) {
         const isLoaded = cmdLoader();
 
         if (isLoaded) {
+            c.user.setActivity("на тебя!", { type: ActivityType.Watching });
+
             console.log(`${c.user.username} is up and running!`);
         } else {
             console.log("Failed to register commands!");
