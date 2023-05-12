@@ -1,7 +1,7 @@
-import { Collection, Interaction, REST, Routes } from "discord.js";
+import { Collection, Interaction as DJSInteraction, REST, Routes } from "discord.js";
 import { join } from "path";
 import { readdirSync } from "fs";
-import { SlashCommand } from "./types";
+import { Button, SlashCommand } from "./types";
 import dotenv from "dotenv";
 import { Player } from "discord-player";
 dotenv.config();
@@ -42,10 +42,13 @@ function cmdLoader(): boolean {
     }
 }
 
-function cmdTrigger(interaction: Interaction, player: Player) {
-    if (!interaction.isChatInputCommand()) return;
+function cmdTrigger(interaction: DJSInteraction, player: Player) {
+    let command: SlashCommand | Button | undefined;
 
-    const command = slashCommands.get(interaction.commandName);
+    if (interaction.isChatInputCommand()) {
+        command = slashCommands.get(interaction.commandName);
+    } else return;
+
     if (!command) return;
 
     try {

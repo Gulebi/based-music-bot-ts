@@ -1,12 +1,13 @@
 import { Player } from "discord-player";
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { colors, getAvatar, getUsername } from "../utils";
+import { Interaction } from "../types";
 
 export default function registerPlayerEvents(player: Player) {
     player.events.on("error", (queue, error) => {
         console.log(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
 
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
         interaction.followUp({ content: "Error!" });
     });
 
@@ -15,7 +16,7 @@ export default function registerPlayerEvents(player: Player) {
     });
 
     player.events.on("playerSkip", (queue, track) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         interaction.followUp({
             embeds: [
@@ -27,7 +28,7 @@ export default function registerPlayerEvents(player: Player) {
     });
 
     player.events.on("playerPause", (queue) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         interaction.followUp({
             embeds: [new EmbedBuilder().setTitle("Плеер приостановлен!").setColor(colors.baseColor)],
@@ -35,7 +36,7 @@ export default function registerPlayerEvents(player: Player) {
     });
 
     player.events.on("playerResume", (queue) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         interaction.followUp({
             embeds: [new EmbedBuilder().setTitle("Плеер возобновлен!").setColor(colors.baseColor)],
@@ -43,7 +44,7 @@ export default function registerPlayerEvents(player: Player) {
     });
 
     player.events.on("audioTrackAdd", (queue, track) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         interaction.followUp({
             embeds: [
@@ -58,7 +59,7 @@ export default function registerPlayerEvents(player: Player) {
     });
 
     player.events.on("playerStart", (queue, track) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         const channel = interaction.channel;
 
@@ -83,19 +84,19 @@ export default function registerPlayerEvents(player: Player) {
     });
 
     player.events.on("disconnect", (queue) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         interaction.followUp("Меня вручную отключили от голосового канала, очищаю очередь!");
     });
 
     player.events.on("emptyChannel", (queue) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+        const interaction = queue.metadata as Interaction;
 
         interaction.followUp("В голосовом канале никого нет, ливаю...");
     });
 
-    player.events.on("emptyQueue", (queue) => {
-        const interaction = queue.metadata as ChatInputCommandInteraction;
+    player.events.on("playerFinish", (queue) => {
+        const interaction = queue.metadata as Interaction;
 
         const channel = interaction.channel;
 

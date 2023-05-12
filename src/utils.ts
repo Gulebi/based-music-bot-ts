@@ -1,10 +1,11 @@
 import { ChatInputCommandInteraction, ColorResolvable } from "discord.js";
+import { Interaction } from "./types";
 
 export const colors = {
     baseColor: "#4188D2" as ColorResolvable,
 };
 
-export const getUsername = (interaction: ChatInputCommandInteraction, author?: boolean): string => {
+export const getUsername = (interaction: Interaction, author?: boolean): string => {
     if (author) {
         return interaction.user.username;
     } else {
@@ -12,7 +13,7 @@ export const getUsername = (interaction: ChatInputCommandInteraction, author?: b
     }
 };
 
-export const getAvatar = (interaction: ChatInputCommandInteraction, author?: boolean, size: number = 512): string => {
+export const getAvatar = (interaction: Interaction, author?: boolean, size: number = 512): string => {
     const defaultAvatar = `https://www.gravatar.com/avatar/00000000000000000000000000000000?s=${size}&d=mp&f=y`;
 
     if (author) {
